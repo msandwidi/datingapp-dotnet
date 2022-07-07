@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using API.Data;
 using API.interfaces;
 using API.services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -14,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 namespace API
@@ -36,6 +39,16 @@ namespace API
       });
       services.AddControllers();
       services.AddCors();
+      services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opts =>
+      {
+        opts.TokenValidationParameters = new TokenValidationParameters
+        {
+          ValidateIssuerSigningKey = true,
+          IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["TokenKey"])),
+          ValidateAudience = false,
+          ValidateIssuer = false
+        };
+      });
       services.AddSwaggerGen(c =>
       {
         c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPIv5", Version = "v1" });
@@ -56,10 +69,13 @@ namespace API
 
       app.UseRouting();
 
-      //must after UseRouting()
+      //must be after UseRouting()
       //must be beforeUseAuthorization()
       //must be UseEndpoints()
-      app.UseCors(opts=>opts.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200"));
+      app.UseCors(opts => opts.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200"));
+
+      //must be before authorization
+      app.UseAuthentication();
 
       app.UseAuthorization();
 
