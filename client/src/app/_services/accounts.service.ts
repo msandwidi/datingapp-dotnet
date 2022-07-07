@@ -9,9 +9,9 @@ import { User } from '../models/user'
 })
 export class AccountsService {
   baseUrl = 'https://localhost:5001/api/'
-  private currentUserSource = new ReplaySubject<User>(1);
+  private currentUserSource = new ReplaySubject<User>(1)
 
-  currentUser$ = this.currentUserSource.asObservable();
+  currentUser$ = this.currentUserSource.asObservable()
 
   constructor (private http: HttpClient) {}
 
@@ -21,9 +21,21 @@ export class AccountsService {
         const user = res
 
         if (user) {
-          localStorage.setItem('user', JSON.stringify(user));
-          this.currentUserSource.next(user);
+          localStorage.setItem('user', JSON.stringify(user))
+          this.currentUserSource.next(user)
         }
+      })
+    )
+  }
+
+  register (model: any) {
+    return this.http.post(this.baseUrl + 'account/register', model).pipe(
+      map((user: User) => {
+        if (user) {
+          localStorage.setItem('user', JSON.stringify(user))
+          this.currentUserSource.next(user)
+        }
+        return user
       })
     )
   }
@@ -33,7 +45,7 @@ export class AccountsService {
     this.currentUserSource.next(null)
   }
 
-  setCurrentUser(user: User){
+  setCurrentUser (user: User) {
     this.currentUserSource.next(user)
   }
 }
