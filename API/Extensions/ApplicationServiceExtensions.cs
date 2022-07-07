@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using API.Data;
-using API.interfaces;
+using API.Interfaces;
 using API.services;
 using Microsoft.EntityFrameworkCore;
 
