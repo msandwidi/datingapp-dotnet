@@ -56,7 +56,7 @@ namespace API
       //must after UseRouting()
       //must be beforeUseAuthorization()
       //must be UseEndpoints()
-      app.UseCors(opts=>opts.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200"));
+      app.UseCors(opts=>opts.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200"));
 
       app.UseAuthorization();
 
