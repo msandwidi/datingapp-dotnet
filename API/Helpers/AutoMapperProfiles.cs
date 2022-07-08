@@ -4,16 +4,20 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.DTOs;
 using API.Entities;
+using API.Extensions;
 using AutoMapper;
 
 namespace API.Helpers
 {
-    public class AutoMapperProfiles : Profile
+  public class AutoMapperProfiles : Profile
+  {
+    public AutoMapperProfiles()
     {
-        public AutoMapperProfiles()
-        {
-            CreateMap<AppUser, MemberDto>();
-            CreateMap<Photo, PhotoDto>();
-        }
+      CreateMap<AppUser, MemberDto>()
+      .ForMember(dest => dest.PhotoUrl, opt => opt.MapFrom(src => src.Photos.FirstOrDefault(f => f.IsMain).Url))
+      .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.DateOfBirth.CalculateAge()))
+      ;
+      CreateMap<Photo, PhotoDto>();
     }
+  }
 }
