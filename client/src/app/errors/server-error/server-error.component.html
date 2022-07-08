@@ -1,0 +1,27 @@
+<div class="container">
+  <h1>Internal Server Error</h1>
+  
+  <ng-container *ngIf="error">
+    <h4>Refreshing the page will make the error disapear</h4>
+    <h5 class="text-danger">Error: {{error.message}}</h5>
+    <p class="font-weight-bold">Probably not an error from Angular</p>
+    <p>What to do next></p>
+
+    <ol>
+      <li>Chill out. We got you covered</li>
+    </ol>
+
+    <p>Following is the stack trace</p>
+
+    <code class="mt-5" style="background-color: whitesmoke;">{{error.details}}</code>
+    <br>
+
+  </ng-container>
+  
+<ng-container *ngIf="!error">
+  <h4>Nothing to show here for now</h4>
+</ng-container>
+
+
+  <button class="btn btn-info btn-lg mt-5" routerLink="/">Return to Home Page</button>
+</div>
