@@ -46,8 +46,8 @@ namespace API.Data
 
       query = userParams.OrderBy switch
       {
-        "createdAt" => query.OrderByDescending(u => u.CreatedAt),
-        _ => query.OrderByDescending(u => u.LastActiveAt)
+        "created" => query.OrderByDescending(u => u.Created),
+        _ => query.OrderByDescending(u => u.LastActive)
       };
 
       return await PagedList<MemberDto>.CreateAsync(query.ProjectTo<MemberDto>(_mapper.ConfigurationProvider).AsNoTracking(), userParams.PageNumber, userParams.PageSize);
