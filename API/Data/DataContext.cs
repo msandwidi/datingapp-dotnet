@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using API.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Data
 {
-  public class DataContext : DbContext
+  public class DataContext : IdentityDbContext<AppUser, AppRole, int, IdentityUserClaim<int>, AppUserRole, IdentityUserLogin<int>, IdentityRoleClaim<int>, IdentityUserToken<int>>
   {
     public DataContext(DbContextOptions options) : base(options)
     {
 
     }
-
-    public DbSet<AppUser> Users { get; set; }
 
     public DbSet<UserLike> Likes { get; set; }
 
@@ -24,12 +24,31 @@ namespace API.Data
     {
       base.OnModelCreating(builder);
 
+      builder.Entity<AppUser>()
+      .HasMany(r => r.UserRoles)
+      .WithOne(r => r.User)
+      .HasForeignKey(r => r.UserId)
+      .IsRequired();
+
+      builder.Entity<AppRole>()
+      .HasMany(r => r.UserRoles)
+      .WithOne(r => r.Role)
+      .HasForeignKey(r => r.RoleId)
+      .IsRequired();
+
       builder.Entity<UserLike>()
       .HasKey(k => new { k.SourceUserId, k.LikedUserId });
 
-      builder.Entity<UserLike>().HasOne(s => s.LikedUser).WithMany(l => l.LikedByUsers).HasForeignKey(s => s.LikedUserId).OnDelete(DeleteBehavior.NoAction);
+      builder.Entity<UserLike>()
+      .HasOne(s => s.LikedUser)
+      .WithMany(l => l.LikedByUsers)
+      .HasForeignKey(s => s.LikedUserId)
+      .OnDelete(DeleteBehavior.NoAction);
 
-      builder.Entity<Message>().HasOne(m => m.Recipient).WithMany(m => m.MessagesReceived).OnDelete(DeleteBehavior.Restrict);
+      builder.Entity<Message>()
+      .HasOne(m => m.Recipient)
+      .WithMany(m => m.MessagesReceived)
+      .OnDelete(DeleteBehavior.Restrict);
     }
   }
 }
