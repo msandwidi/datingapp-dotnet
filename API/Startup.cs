@@ -50,6 +50,8 @@ namespace API
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
 
+      AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
       app.UseMiddleware<ExceptionMiddleware>();
 
       app.UseHttpsRedirection();
