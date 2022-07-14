@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild } from '@angular/core'
-import { NgForm } from '@angular/forms'
-import { Message } from 'src/app/models/message'
-import { MessageService } from 'src/app/_services/message.service'
+import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { Message } from 'src/app/models/message';
+import { MessageService } from 'src/app/_services/message.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -10,22 +10,22 @@ import { MessageService } from 'src/app/_services/message.service'
   styleUrls: ['./member-messages.component.css']
 })
 export class MemberMessagesComponent implements OnInit {
-  @ViewChild('messageForm') messageForm: NgForm
-  @Input() messages: Message[] = []
-  @Input() username: string
-  messageContent: string
-  loading =false
+  @ViewChild('messageForm') messageForm: NgForm;
+  @Input() messages: Message[];
+  @Input() username: string;
+  messageContent: string;
+  loading = false;
 
-  constructor (public messageService: MessageService) {}
+  constructor(public messageService: MessageService) { }
 
-  ngOnInit (): void {}
-
-  sendMessage () {
-    this.loading = true
-    this.messageService
-      .sendMessage(this.username, this.messageContent)
-      .then(() => {
-        this.messageForm.reset()
-      }).finally(()=> this.loading = false)
+  ngOnInit(): void {
   }
+
+  sendMessage() {
+    this.loading = true;
+    this.messageService.sendMessage(this.username, this.messageContent).then(() => {
+      this.messageForm.reset();
+    }).finally(() => this.loading = false);
+  }
+
 }
